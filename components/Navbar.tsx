@@ -42,7 +42,7 @@ const navlinks: navlinkType[] = [
     name: "About",
   },
   {
-    link: "/admin-application",
+    link: "/vendor-application",
     name: "Become a vendor",
   },
 ];

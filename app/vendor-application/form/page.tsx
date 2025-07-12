@@ -1,7 +1,7 @@
 "use client";
 
 import { adminApplicationSchema } from "@/schema/admin-application";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,8 +16,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { SendVendorEmail } from "@/actions/sendVendorEmail";
+import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 const page = () => {
+
+  const [loading, setLoading] = useState(false)
+
   const form = useForm<z.infer<typeof adminApplicationSchema>>({
     resolver: zodResolver(adminApplicationSchema),
     defaultValues: {
@@ -27,16 +33,25 @@ const page = () => {
       city: "",
       state: "",
       pincode: "",
+      contactNumber: "", 
     },
   });
 
-  const onSubmit = (data: z.infer<typeof adminApplicationSchema>) => {
-    console.log("Form Submitted:", data);
-    // Add your submit logic here
+  const onSubmit = async(data: z.infer<typeof adminApplicationSchema>) => {
+    setLoading(true)
+    const res = await SendVendorEmail(data);
+
+    if(res.success){
+      toast.success(res.message)
+    }else{
+      toast.error(res.message)
+    }
+
+    setLoading(false)
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center px-4 p-28 bg-gray-50 ">
       <div className="w-full mx-auto max-w-2xl border border-gray-200 rounded-xl p-10 shadow-sm bg-white">
         <h1 className="text-center text-4xl font-bold text-[#0C6170] mb-10">
           Vendor Application Form
@@ -44,6 +59,7 @@ const page = () => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
             {/* Name */}
             <FormField
               control={form.control}
@@ -52,9 +68,26 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">Name</FormLabel>
                   <FormControl>
+                    <Input placeholder="Your full name or shop name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Contact Number */}
+            <FormField
+              control={form.control}
+              name="contactNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-medium">Contact Number</FormLabel>
+                  <FormControl>
                     <Input
-                      placeholder="Enter your full name or shop name"
+                      placeholder="Enter your 10-digit mobile number"
                       {...field}
+                      type="tel"
+                      maxLength={10}
                     />
                   </FormControl>
                   <FormMessage />
@@ -70,10 +103,7 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">Google Map Link</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Paste your Google Maps business location URL"
-                      {...field}
-                    />
+                    <Input placeholder="Business location URL" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,10 +118,7 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">Address</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Street address, building number, etc."
-                      {...field}
-                    />
+                    <Input placeholder="Street, building number, etc." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,7 +133,7 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">City</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your city" {...field} />
+                    <Input placeholder="Your city" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,7 +148,7 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">State</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your state" {...field} />
+                    <Input placeholder="Your state" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -137,8 +164,9 @@ const page = () => {
                   <FormLabel className="font-medium">Pincode</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
-                      placeholder="Enter your area's pincode"
+                      type="text"
+                      placeholder="6-digit pincode"
+                      maxLength={6}
                       {...field}
                     />
                   </FormControl>
@@ -148,7 +176,7 @@ const page = () => {
             />
 
             <Button type="submit" className="w-full mt-6">
-              Submit Application
+              {loading ? <Loader2Icon  className="animate-spin"/> : "Submit Application"}
             </Button>
           </form>
         </Form>

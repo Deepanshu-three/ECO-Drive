@@ -22,12 +22,18 @@ export const adminApplicationSchema = z.object({
     .min(2, { message: "City name must be at least 2 characters long" })
     .nonempty({ message: "City is required" }),
 
-  pincode: z
-    .string()
-    .regex(/^\d{6}$/, { message: "Pincode must be a valid 6-digit number" }),
-
   state: z
     .string()
     .min(2, { message: "State name must be at least 2 characters long" })
     .nonempty({ message: "State is required" }),
+
+  pincode: z
+    .string()
+    .regex(/^\d{6}$/, { message: "Pincode must be a valid 6-digit number" }),
+
+  contactNumber: z
+    .string()
+    .regex(/^[6-9]\d{9}$/, {
+      message: "Contact number must be a valid 10-digit Indian mobile number",
+    }),
 });

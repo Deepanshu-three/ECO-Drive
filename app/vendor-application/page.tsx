@@ -19,7 +19,7 @@ const page = () => {
       <div className="mb-12">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Step 2: Apply as a Vendor</h2>
         <ul className="list-disc list-inside text-gray-600 leading-relaxed space-y-2">
-          <li>Click the <span className="font-medium">“Apply as Vendor”</span> button on your dashboard or visit <Link href={"/admin-application/form"}  className="text-blue-600 underline cursor-pointer">Apply Now</Link>.</li>
+          <li>Click the <span className="font-medium">“Apply as Vendor”</span> button on your dashboard or visit <Link href={"/vendor-application/form"}  className="text-blue-600 underline cursor-pointer">Apply Now</Link>.</li>
           <li>Fill out the Vendor Application Form with the following details:
             <ul className="list-disc list-inside ml-6 mt-2 space-y-1">
               <li>Business/Brand Name</li>

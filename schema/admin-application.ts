@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 export const adminApplicationSchema = z.object({
   name: z
@@ -36,4 +36,8 @@ export const adminApplicationSchema = z.object({
     .regex(/^[6-9]\d{9}$/, {
       message: "Contact number must be a valid 10-digit Indian mobile number",
     }),
+
+  email: z
+    .string()
+    .email({ message: "Please provide a valid email address" }),
 });

@@ -1,11 +1,14 @@
-import React from 'react'
+
+import React from "react";
+import AdminDashboard from "./_components/AdminDashboard";
+
+
+
 
 const page = () => {
-  return (
-    <div className='min-h-screen flex items-center justify-center'>
-        
-    </div>
-  )
-}
+  return <>
+    <AdminDashboard />
+  </>
+};
 
-export default page
+export default page;

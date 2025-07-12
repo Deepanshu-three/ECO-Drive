@@ -2,6 +2,7 @@ import * as React from "react";
 
 interface AdminVendorEmailProps {
   name: string;
+  email: string
   contactNumber: string;
   googleMap: string;
   address: string;
@@ -12,6 +13,7 @@ interface AdminVendorEmailProps {
 
 export function AdminVendorEmail({
   name,
+  email,
   contactNumber,
   googleMap,
   address,
@@ -25,6 +27,7 @@ export function AdminVendorEmail({
       <p>A new vendor has applied on ECO-Drive. Here are the details:</p>
       <ul>
         <li><strong>Name:</strong> {name}</li>
+        <li><strong>Email:</strong> {email}</li>
         <li><strong>Contact Number:</strong> {contactNumber}</li>
         <li><strong>Google Map:</strong> <a href={googleMap}>{googleMap}</a></li>
         <li><strong>Address:</strong> {address}</li>

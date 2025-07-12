@@ -3,6 +3,7 @@ import { AdminVendorEmail } from "@/email/AdminVendorEmail";
 import { VendorConfirmationEmail } from "@/email/VendorConformationEmail";
 import { resend } from "@/lib/resend";
 import { currentUser } from "@clerk/nextjs/server";
+import { email } from "zod";
 
 interface data {
   name: string;
@@ -12,6 +13,7 @@ interface data {
   state: string;
   pincode: string;
   contactNumber: string;
+  email: string
 }
 
 type SendVendorEmailResult =
@@ -28,7 +30,6 @@ export async function SendVendorEmail(
       return { success: false, message: "unauthorise" };
     }
 
-    const email = user.primaryEmailAddress?.emailAddress;
     const name = user.fullName!;
 
     if (!email) {

@@ -19,9 +19,11 @@ import { Input } from "@/components/ui/input";
 import { SendVendorEmail } from "@/actions/sendVendorEmail";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
+import { AddVendor } from "@/actions/Vendor";
 
 const page = () => {
-  const [loading, setLoading] = useState(false);
+
+  const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof adminApplicationSchema>>({
     resolver: zodResolver(adminApplicationSchema),
@@ -32,33 +34,34 @@ const page = () => {
       city: "",
       state: "",
       pincode: "",
-      contactNumber: "",
-      email: "",
+      contactNumber: "", 
+      email: ""
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof adminApplicationSchema>) => {
-    setLoading(true);
-    const res = await SendVendorEmail(data);
+  const onSubmit = async(data: z.infer<typeof adminApplicationSchema>) => {
+    setLoading(true)
+    const res = await AddVendor(data);
 
-    if (res.success) {
-      toast.success(res.message);
-    } else {
-      toast.error(res.message);
+    if(res.success){
+      toast.success(res.message)
+    }else{
+      toast.error(res.message)
     }
-
-    setLoading(false);
+    form.reset()
+    setLoading(false)
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 p-28 bg-gray-50 ">
       <div className="w-full mx-auto max-w-2xl border border-gray-200 rounded-xl p-10 shadow-sm bg-white">
         <h1 className="text-center text-4xl font-bold text-[#0C6170] mb-10">
-          Vendor Application Form
+          Add a Vendor
         </h1>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
             {/* Name */}
             <FormField
               control={form.control}
@@ -67,15 +70,13 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Your full name or shop name"
-                      {...field}
-                    />
+                    <Input placeholder="Your full name or shop name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             {/* email */}
             <FormField
               control={form.control}
@@ -84,16 +85,14 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">Email</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Your email"
-                      {...field}
-                    />
+                    <Input placeholder="Your email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            
             {/* Contact Number */}
             <FormField
               control={form.control}
@@ -137,10 +136,7 @@ const page = () => {
                 <FormItem>
                   <FormLabel className="font-medium">Address</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Street, building number, etc."
-                      {...field}
-                    />
+                    <Input placeholder="Street, building number, etc." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -198,11 +194,7 @@ const page = () => {
             />
 
             <Button type="submit" className="w-full mt-6">
-              {loading ? (
-                <Loader2Icon className="animate-spin" />
-              ) : (
-                "Submit Application"
-              )}
+              {loading ? <Loader2Icon  className="animate-spin"/> : "Submit Application"}
             </Button>
           </form>
         </Form>

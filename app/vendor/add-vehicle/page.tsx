@@ -21,7 +21,7 @@ import {
   uploadMultipleImagesAction,
   uploadSingleImageAction,
 } from "@/actions/imageUploader";
-import { AddVehicle } from "@/actions/addVehicle";
+import { AddVehicle } from "@/actions/Vehicle";
 
 type VendorVehicleType = z.infer<typeof vendorVehicleSchema>;
 

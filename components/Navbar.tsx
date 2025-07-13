@@ -26,16 +26,8 @@ const navlinks: navlinkType[] = [
     name: "Home",
   },
   {
-    link: "/products",
-    name: "Products",
-  },
-  {
-    link: "/custom",
-    name: "Custom",
-  },
-  {
-    link: "/blogs",
-    name: "Blogs",
+    link: "/rent",
+    name: "Rent",
   },
   {
     link: "/about",
@@ -83,7 +75,7 @@ const Navbar = () => {
             <Link
               key={index}
               href={link.link}
-              className={`font-bold relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-blue-600 after:transition-all ${
+              className={`font-bold text-xl relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-blue-600 after:transition-all ${
                 pathname === link.link
                   ? "text-blue-600 after:w-full"
                   : "text-gray-600 hover:text-gray-900"

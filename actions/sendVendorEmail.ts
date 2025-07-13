@@ -2,26 +2,13 @@
 import { AdminVendorEmail } from "@/email/AdminVendorEmail";
 import { VendorConfirmationEmail } from "@/email/VendorConformationEmail";
 import { resend } from "@/lib/resend";
+import { EmailData, SendVendorEmailResult } from "@/types/Email";
 import { currentUser } from "@clerk/nextjs/server";
 import { email } from "zod";
 
-interface data {
-  name: string;
-  googleMap: string;
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
-  contactNumber: string;
-  email: string
-}
-
-type SendVendorEmailResult =
-  | { success: true; message: string }
-  | { success: false; message: string };
 
 export async function SendVendorEmail(
-  data: data
+  data: EmailData
 ): Promise<SendVendorEmailResult> {
   try {
     const user = await currentUser();

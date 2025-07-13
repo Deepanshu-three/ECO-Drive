@@ -1,18 +1,10 @@
 "use server"
 import db from "@/lib/prisma";
+import { AddVehicleData, GetVehiclesDetails, GetVendorVehiclesResponse, VehicleWithDetails } from "@/types/Vehicle";
 import { currentUser } from "@clerk/nextjs/server";
 
-interface Data{
-    name: string;
-    brand: string;
-    type: string;
-    pricePerDay: number;
-    numberPlate: string;
-    thumbnailUrl: string;
-    vehicleImageUrls: string[];
 
-}
-export async function AddVehicle(data: Data) {
+export async function AddVehicle(data: AddVehicleData) {
   try {
 
     const user = await currentUser()
@@ -68,25 +60,7 @@ export async function AddVehicle(data: Data) {
   }
 }
 
-export interface Vehicle {
-  id: string;
-  name: string;
-  brand: string;
-  type: string;
-  pricePerDay: number;
-  thumbnail: string;
-  numberPlate: string;
-  createdAt: Date;
-  images: {
-    id: string;
-    url: string;
-  }[];
-}
-interface GetVendorVehiclesResponse {
-  success: boolean;
-  data?: Vehicle[];
-  message?: string;
-}
+
 
 
 export async function GetVendorVehicles(): Promise<GetVendorVehiclesResponse>  {
@@ -159,6 +133,34 @@ export async function DeleteVehicle(id: string) {
     return {
       success: false,
       message: "Failed to delete vehicle",
+    };
+  }
+}
+
+
+
+export async function getAllVehiclesWithDetails(): Promise<GetVehiclesDetails> {
+  try {
+    const vehicles = await db.vehicle.findMany({
+      include: {
+        vendor: true,
+        bookings: true,
+        images: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return {
+      success: true,
+      data: vehicles,
+    };
+  } catch (error) {
+    console.error("Error fetching vehicles with details:", error);
+    return {
+      success: false,
+      message: "Failed to fetch vehicle details",
     };
   }
 }

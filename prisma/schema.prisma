@@ -18,7 +18,8 @@ model Vendor {
   state        String?
   postalCode   String?
   createdAt    DateTime  @default(now())
-  vehicles     Vehicle[] 
+  vehicles     Vehicle[]
+  bookings     Booking[] 
 }
 
 model City {
@@ -38,6 +39,7 @@ model Vehicle {
   vendor       Vendor         @relation(fields: [vendorId], references: [id])
   createdAt    DateTime  @default(now())
   images       VehicleImage[] 
+  bookings     Booking[]
 }
 
 model VehicleImage {
@@ -45,4 +47,37 @@ model VehicleImage {
   url       String
   vehicleId String
   vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+
+
+model Booking {
+  id            String    @id @default(cuid())
+  name          String
+  email         String
+  phoneNumber   String
+
+  vendorId      String
+  vendor        Vendor    @relation(fields: [vendorId], references: [id])
+
+  vehicleId     String
+  vehicle       Vehicle   @relation(fields: [vehicleId], references: [id])
+
+  fromDate      DateTime
+  toDate        DateTime
+
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus @default(PENDING)
+
+  createdAt     DateTime  @default(now())
+}
+
+enum PaymentMethod {
+  COD
+  RAZORPAY
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

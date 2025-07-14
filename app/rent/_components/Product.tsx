@@ -92,6 +92,35 @@ export default function ProductsList({ filters }: ProductFilterProps) {
     fetchCities();
   }, []);
 
+  useEffect(() => {
+    let filtered = [...allVehicles];
+
+    if (filters.category) {
+      filtered = filtered.filter(
+        (v) => v.type?.toLowerCase() === filters.category.toLowerCase()
+      );
+    }
+
+    if (filters.priceMin !== undefined) {
+      filtered = filtered.filter((v) => v.pricePerDay >= filters.priceMin);
+    }
+
+    if (filters.priceMax !== undefined) {
+      filtered = filtered.filter((v) => v.pricePerDay <= filters.priceMax);
+    }
+
+    if (filters.sortOrder === "lowToHigh") {
+      filtered = filtered.sort((a, b) => a.pricePerDay - b.pricePerDay);
+    }
+
+    if (filters.sortOrder === "highToLow") {
+      filtered = filtered.sort((a, b) => b.pricePerDay - a.pricePerDay);
+    }
+
+    setFilteredVehicles(filtered);
+    setCurrentPage(1);
+  }, [filters, allVehicles]);
+
   const handleSearch = () => {
     let filtered = [...allVehicles];
 

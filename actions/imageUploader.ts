@@ -22,7 +22,6 @@ const uploadFromBuffer = (buffer: Buffer): Promise<string> => {
   });
 };
 
-// ⬆ Shared upload logic
 
 // MULTIPLE IMAGE UPLOAD
 export async function uploadMultipleImagesAction(formData: FormData) {

@@ -5,6 +5,7 @@ import { CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { getAllVehiclesWithDetails } from "@/actions/Vehicle";
 import { getAllCities } from "@/actions/City";
@@ -23,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { VehicleWithDetails } from "@/types/Vehicle";
 
 function ProductSkeleton() {
   return (
@@ -45,15 +47,22 @@ interface ProductFilterProps {
   };
 }
 
+type citis = {
+  name: string;
+  id: string;
+};
+
 export default function ProductsList({ filters }: ProductFilterProps) {
   const router = useRouter();
   const PRODUCTS_PER_PAGE = 9;
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [allVehicles, setAllVehicles] = useState<any[]>([]);
-  const [filteredVehicles, setFilteredVehicles] = useState<any[]>([]);
+  const [allVehicles, setAllVehicles] = useState<VehicleWithDetails[]>([]);
+  const [filteredVehicles, setFilteredVehicles] = useState<
+    VehicleWithDetails[]
+  >([]);
   const [loading, setLoading] = useState(true);
-  const [allCities, setAllCities] = useState<any[]>([]);
+  const [allCities, setAllCities] = useState<citis[]>([]);
 
   const [selectedCity, setSelectedCity] = useState("");
   const [fromDate, setFromDate] = useState<Date | undefined>();
@@ -120,6 +129,27 @@ export default function ProductsList({ filters }: ProductFilterProps) {
     setFilteredVehicles(filtered);
     setCurrentPage(1);
   }, [filters, allVehicles]);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const from = searchParams.get("fromDate");
+    const to = searchParams.get("toDate");
+
+    if (from) {
+      const parsedFrom = new Date(from);
+      if (!isNaN(parsedFrom.getTime())) {
+        setFromDate(parsedFrom);
+      }
+    }
+
+    if (to) {
+      const parsedTo = new Date(to);
+      if (!isNaN(parsedTo.getTime())) {
+        setToDate(parsedTo);
+      }
+    }
+  }, []);
 
   const handleSearch = () => {
     let filtered = [...allVehicles];
@@ -212,7 +242,7 @@ export default function ProductsList({ filters }: ProductFilterProps) {
           paginatedVehicles.map((vehicle) => (
             <div
               key={vehicle.id}
-              onClick={() => router.push(`/vehicles/${vehicle.id}`)}
+              onClick={() => router.push(`/rent/${vehicle.id}`)}
               className="flex flex-col sm:flex-row justify-between items-start gap-6 p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:scale-[1.01] hover:border-primary transition-all duration-300 bg-white cursor-pointer"
             >
               {/* Left: Vehicle Image */}

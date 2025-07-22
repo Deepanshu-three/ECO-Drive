@@ -104,7 +104,7 @@ const Navbar = () => {
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuItem asChild>
                     <Link
-                      href="/myOrders"
+                      href="/bookings"
                       className="flex items-center px-4 py-2 rounded-md hover:bg-blue-200/60"
                     >
                       <ListOrderedIcon className="mr-2 w-5 h-5" />

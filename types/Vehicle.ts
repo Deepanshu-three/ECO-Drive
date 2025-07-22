@@ -70,3 +70,8 @@ export interface GetVehiclesDetails {
 }
 
 
+export interface GetVehicleOnesDetails {
+  success: boolean;
+  data?: VehicleWithDetails;
+  message?: string;
+}

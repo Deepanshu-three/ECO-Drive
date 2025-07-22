@@ -1,6 +1,6 @@
 "use server"
 import db from "@/lib/prisma";
-import { AddVehicleData, GetVehiclesDetails, GetVendorVehiclesResponse, VehicleWithDetails } from "@/types/Vehicle";
+import { AddVehicleData, GetVehicleOnesDetails, GetVehiclesDetails, GetVendorVehiclesResponse, VehicleWithDetails } from "@/types/Vehicle";
 import { currentUser } from "@clerk/nextjs/server";
 
 
@@ -163,4 +163,80 @@ export async function getAllVehiclesWithDetails(): Promise<GetVehiclesDetails> {
       message: "Failed to fetch vehicle details",
     };
   }
+}
+
+
+export async function GetVehicleById(id: string): Promise<GetVehicleOnesDetails> {
+  try {
+    const vehicle = await db.vehicle.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        vendor: true,
+        bookings: true,
+        images: true,
+      },
+    });
+
+    if (!vehicle) {
+      return {
+        success: false,
+        message: "Vehicle not found",
+      };
+    }
+
+    return {
+      success: true,
+      data: vehicle,
+    };
+  } catch (error) {
+    console.error("Error fetching vehicle", error);
+    return {
+      success: false,
+      message: "Failed to fetch vehicle details",
+    };
+  }
+}
+
+
+
+export async function checkVehicleAvailability({
+  vehicleId,
+  fromDate,
+  toDate,
+}: {
+  vehicleId: string;
+  fromDate: string; // ISO string
+  toDate: string;   // ISO string
+}): Promise<{ available: boolean }> {
+  const from = new Date(fromDate);
+  const to = new Date(toDate);
+
+  if (to <= from) {
+    throw new Error('Invalid date range');
+  }
+
+  // Get all bookings for this vehicle that overlap with the requested interval
+  const overlappingBookings = await db.booking.findMany({
+    where: {
+      vehicleId,
+      AND: [
+        {
+          fromDate: {
+            lte: to,
+          },
+        },
+        {
+          toDate: {
+            gte: from,
+          },
+        },
+      ],
+    },
+  });
+
+  return {
+    available: overlappingBookings.length === 0,
+  };
 }

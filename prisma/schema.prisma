@@ -37,7 +37,7 @@ model Vehicle {
   pricePerDay  Int
   thumbnail    String
   vendor       Vendor         @relation(fields: [vendorId], references: [id])
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime       @default(now())
   images       VehicleImage[] 
   bookings     Booking[]
 }
@@ -49,31 +49,28 @@ model VehicleImage {
   vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
 }
 
-
 model Booking {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String
   email         String
   phoneNumber   String
+  licenseNo     String
 
   vendorId      String
-  vendor        Vendor    @relation(fields: [vendorId], references: [id])
+  vendor        Vendor         @relation(fields: [vendorId], references: [id])
 
   vehicleId     String
-  vehicle       Vehicle   @relation(fields: [vehicleId], references: [id])
+  vehicle       Vehicle        @relation(fields: [vehicleId], references: [id])
 
   fromDate      DateTime
   toDate        DateTime
 
-  paymentMethod PaymentMethod
-  paymentStatus PaymentStatus @default(PENDING)
+  paymentStatus PaymentStatus  @default(PENDING)
+  razorpayOrderId String?      // Add this if you want to store Razorpay order ID
+  razorpayPaymentId String?    // Optional: Razorpay payment ID
+  razorpaySignature String?    // Optional: Signature to validate payment
 
-  createdAt     DateTime  @default(now())
-}
-
-enum PaymentMethod {
-  COD
-  RAZORPAY
+  createdAt     DateTime       @default(now())
 }
 
 enum PaymentStatus {
